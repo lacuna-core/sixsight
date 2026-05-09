@@ -80,6 +80,8 @@ All commands are available via the `sixsight` entry point:
 
 ```bash
 sixsight --help
+# or
+ss --help
 # Install completion for the current shell
 sixsight --install-completion
 ```
@@ -133,3 +135,63 @@ sixsight download ttc-subway-delay-data -f csv
 ```
 
 Each resource file is saved as `data/<dataset-name>/<filename>` where the filename is taken from the download URL. A `metadata.json` file is written alongside the data files containing the full dataset metadata.
+
+### Data directories
+
+```
+data/
+  raw/<dataset-name>/   # files downloaded by `sixsight download`
+  prep/<dataset-name>/  # aggregated outputs written by CLI commands (e.g. monthly.csv)
+```
+
+### Subway delay analysis
+
+Aggregate all TTC subway delay files into a monthly summary CSV:
+
+```bash
+sixsight subway aggregate
+# or using the ss alias:
+ss subway aggregate
+```
+
+Output is written to `data/prep/ttc-subway-delay-data/monthly.csv`.
+
+---
+
+## Web interface
+
+A static Vite + React site that visualises the prepared data.
+
+### Prerequisites
+
+- [Node.js](https://nodejs.org/) 20+
+
+To regenerate `web/public/data/monthly.csv` after new raw data is downloaded:
+```bash
+uv run ss subway aggregate
+cp data/prep/ttc-subway-delay-data/monthly.csv web/public/data/monthly.csv
+
+### Local development
+
+```bash
+# 1. Generate the aggregated data (if not already present)
+uv run ss subway aggregate
+
+# 2. Copy it into the web public directory
+cp data/prep/ttc-subway-delay-data/monthly.csv web/public/data/monthly.csv
+
+# 3. Install dependencies and start the dev server
+cd web
+npm install
+npm run dev
+```
+
+The site is available at **http://localhost:5173**.
+
+### Production build
+
+```bash
+cd web
+npm run build       # output → web/dist/
+npm run preview     # serve the build locally to verify
+```

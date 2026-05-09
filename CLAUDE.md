@@ -27,17 +27,46 @@ uv run sixsight --help               # run the CLI
 - **`models/dataset.py`** — Pydantic v2 models (`Dataset`, `Resource`) representing CKAN API responses.
 - **`transforms/pipeline.py`** — composable `Pipeline` of `Transform` callables operating on `polars.DataFrame`.
 - **`viz/charts.py`** — thin wrappers over `great_tables` for tabular output.
-- **`cli/app.py`** — Typer CLI (`search`, `info`, `download` commands).
+- **`cli/app.py`** — Typer CLI (`search`, `info`, `download` commands). Sub-command groups live in separate files (e.g. `cli/ttc_subway_delay.py`) and are registered via `app.add_typer(...)`.
 
 Logging is configured once in `__init__.py`: loguru handler removed and re-added with the level from `SETTINGS.log_level`. Set `SIXSIGHT_LOG_LEVEL=DEBUG` to see outbound HTTP requests.
+
+## Data directories
+
+```
+data/
+  raw/<dataset-name>/   # files downloaded by `sixsight download`
+  prep/<dataset-name>/  # aggregated outputs written by CLI commands (e.g. monthly.csv)
+```
+
+## Web (`web/`)
+
+A Vite + React static site that visualises prepared data from `data/prep/`.
+
+```
+web/
+  public/data/     # CSV files consumed at runtime (copy from data/prep/ before dev/build)
+  src/
+    components/    # one file per page section; add new sections here
+    hooks/         # data-loading hooks (useCSV)
+  index.css        # design tokens (CSS custom properties) and global styles
+```
+
+```bash
+cd web
+npm install        # first time
+npm run dev        # dev server at http://localhost:5173
+npm run build      # production build → web/dist/
+```
 
 ## Dependencies
 Uses [CKAN API](https://docs.ckan.org/en/latest/api/index.html) to access the data
 
-## Key conventions
+## Key conventions and guidelines
 
 - Dependency injection: `TorontoOpenDataClient(config=SETTINGS)` — always pass config explicitly, never use the global inside library code.
 - Raw JSON from the API is typed `dict[str, Any]`; use `object` only when values won't be accessed.
 - mypy is strict. All functions including tests need return type annotations.
 - Git hooks (pre-commit) run ruff (fix + format) and mypy on every commit.
 - CLI lazy imports: in `cli/app.py`, `sixsight.*` imports must be inside the command function body, not at module level. `typer`, `rich`, and stdlib belong at the top of the file. This keeps `--help` fast and isolates heavy deps per command.
+- **After every significant change** — new CLI command, new data pipeline, new web section, new dependency, changed directory layout — update both `CLAUDE.md` (Architecture / conventions) and `README.md` (user-facing instructions). Keep them in sync with the actual codebase.
