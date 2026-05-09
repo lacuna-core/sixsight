@@ -91,7 +91,7 @@ function StatCard({ value, label, color }) {
 }
 
 export default function SubwayDelays() {
-  const { data, loading, error } = useCSV('/data/monthly.csv')
+  const { data, loading, error } = useCSV(`${import.meta.env.BASE_URL}data/monthly.csv`)
 
   const chartData = useMemo(() => {
     if (!data) return []
