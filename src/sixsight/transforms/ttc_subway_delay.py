@@ -17,8 +17,7 @@ def monthly_stats(df: pl.DataFrame) -> pl.DataFrame:
     Rows are sorted ascending by year_month.
     """
     return (
-        df
-        .with_columns(pl.col("Date").str.to_date("%Y-%m-%d"))
+        df.with_columns(pl.col("Date").str.to_date("%Y-%m-%d"))
         .with_columns(
             (pl.col("Date").dt.year() * 100 + pl.col("Date").dt.month()).alias("year_month"),
             pl.col("Date").dt.strftime("%b %Y").alias("month_label"),

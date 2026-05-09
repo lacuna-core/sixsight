@@ -33,7 +33,9 @@ def search(
 @app.command()
 def info(
     name: str = typer.Argument(..., help="Dataset name or ID"),
-    list_files: bool = typer.Option(False, "--list", "-l", help="List all resource files with format and last modified date"),
+    list_files: bool = typer.Option(
+        False, "--list", "-l", help="List all resource files with format and last modified date"
+    ),
 ) -> None:
     """Show metadata for a dataset."""
     from sixsight.config import SETTINGS
@@ -59,8 +61,12 @@ def info(
 @app.command()
 def download(
     name: str = typer.Argument(..., help="Dataset name or ID"),
-    fmt: str | None = typer.Option(None, "--format", "-f", help="Only download resources of this format (e.g. CSV)"),
-    data_dir: Path = typer.Option(DEFAULT_DATA_DIR, "--data-dir", help="Root directory for downloads"),
+    fmt: str | None = typer.Option(
+        None, "--format", "-f", help="Only download resources of this format (e.g. CSV)"
+    ),
+    data_dir: Path = typer.Option(
+        DEFAULT_DATA_DIR, "--data-dir", help="Root directory for downloads"
+    ),
 ) -> None:
     """Download all resource files for a dataset into data/<name>/."""
     import json
