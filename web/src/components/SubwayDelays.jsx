@@ -15,11 +15,15 @@ function fmt(n) {
   return n.toLocaleString('en-CA')
 }
 
+const SKIP_YEAR_LABELS = new Set(['2018', '2019', '2020', '2021'])
+
 function XTick({ x, y, payload }) {
   if (!payload.value?.startsWith('Jan')) return null
+  const year = payload.value.split(' ')[1]
+  if (SKIP_YEAR_LABELS.has(year)) return null
   return (
     <text x={x} y={y + 14} textAnchor="middle" fill="var(--text-3)" fontSize={11}>
-      {payload.value.split(' ')[1]}
+      {year}
     </text>
   )
 }
@@ -118,7 +122,10 @@ export default function SubwayDelays() {
           <h2 className="section-title">TTC Subway Delays</h2>
           <p className="section-subtitle">
             Every logged delay on the TTC subway system, aggregated by month.
-            A delay is any incident that holds a train beyond schedule; a major delay exceeds 20 minutes.
+            A delay is any incident that holds a train beyond schedule.
+            Data is sourced from the{' '}
+            <a href="https://open.toronto.ca/" target="_blank" rel="noreferrer">City of Toronto Open Data portal</a>
+            {' '}and covers 2014 to present. Some periods have incomplete or missing monthly records.
           </p>
         </div>
 

@@ -222,6 +222,19 @@ body {
   line-height: 1.65;
 }
 
+.section-subtitle a {
+  color: var(--text);
+  text-decoration: underline;
+  text-decoration-color: var(--border-hover);
+  text-underline-offset: 3px;
+  transition: color 0.15s, text-decoration-color 0.15s;
+}
+
+.section-subtitle a:hover {
+  color: var(--orange);
+  text-decoration-color: var(--orange);
+}
+
 /* ── Stat cards ──────────────────────────────────────── */
 
 .stats-row {
