@@ -5,6 +5,7 @@ SixSight is an open-source analytics platform that ingests, transforms, and visu
 The name is a nod to The 6ix, Toronto's cultural identity rooted in its area codes (416 / 647), fused with insight — the project's core purpose.
 
 Powered by the [City of Toronto Open Data Portal](https://open.toronto.ca/).
+Uses [CKAN API](https://docs.ckan.org/en/latest/api/index.html) to access the data
 
 ---
 
@@ -109,8 +110,8 @@ sixsight search "building permits"
 Show metadata and available resources for a dataset by name or ID:
 
 ```bash
-sixsight info ttc-subway-delay-data
 sixsight info ttc-bus-delay-data
+sixsight info ttc-subway-delay-data -l
 ```
 
 ```
@@ -122,3 +123,13 @@ Tags: transit, ttc, subway, delays
 Records of delays on the TTC subway network, including date, time,
 station, line, and minutes delayed.
 ```
+
+### Download a dataset
+
+Download all resource files for a dataset into `data/<dataset-name>/`:
+
+```bash
+sixsight download ttc-subway-delay-data -f csv
+```
+
+Each resource file is saved as `data/<dataset-name>/<filename>` where the filename is taken from the download URL. A `metadata.json` file is written alongside the data files containing the full dataset metadata.

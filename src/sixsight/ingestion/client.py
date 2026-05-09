@@ -1,3 +1,4 @@
+from pathlib import Path
 from typing import Any
 
 import httpx
@@ -34,6 +35,16 @@ class TorontoOpenDataClient:
     def get_dataset(self, name_or_id: str) -> Dataset:
         resp = self._get("/api/3/action/package_show", {"id": name_or_id})
         return self._parse_dataset(resp.json()["result"])
+
+    def download_resource(self, resource: Resource, dest: Path) -> None:
+        """Stream a resource URL to dest, creating parent directories as needed."""
+        logger.debug("Downloading {} → {}", resource.url, dest)
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        with self._http.stream("GET", resource.url) as resp:
+            resp.raise_for_status()
+            with dest.open("wb") as fh:
+                for chunk in resp.iter_bytes():
+                    fh.write(chunk)
 
     def _parse_dataset(self, raw: dict[str, Any]) -> Dataset:
         resources = [

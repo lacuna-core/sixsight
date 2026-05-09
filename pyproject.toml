@@ -8,6 +8,7 @@ authors = [
 requires-python = ">=3.14"
 dependencies = [
     "httpx>=0.28.1",
+    "ipykernel>=7.2.0",
     "loguru>=0.7.3",
     "polars[all]>=1.40.1",
     "pydantic>=2.13.4",
@@ -42,6 +43,12 @@ include = ["src/**/*.py", "tests/**/*.py"]
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B", "SIM"]
 ignore = ["E501"]
+
+[tool.ruff.lint.flake8-bugbear]
+extend-immutable-calls = ["typer.Argument", "typer.Option"]
+
+[tool.ruff.lint.per-file-ignores]
+"src/sixsight/__init__.py" = ["E402"]
 
 [tool.ruff.lint.isort]
 known-first-party = ["sixsight"]
