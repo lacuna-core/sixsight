@@ -5,7 +5,10 @@ import typer
 from rich.console import Console
 from rich.table import Table
 
+from sixsight.cli import ttc_subway_delay
+
 app = typer.Typer(help="SixSight — Toronto open data analytics CLI")
+app.add_typer(ttc_subway_delay.app, name="subway")
 DEFAULT_DATA_DIR = Path("data/raw")
 console = Console()
 
