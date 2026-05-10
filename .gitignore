@@ -219,4 +219,5 @@ __marimo__/
 
 .idea
 
-data/
+data/raw
+data/prep

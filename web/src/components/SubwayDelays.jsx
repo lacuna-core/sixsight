@@ -11,6 +11,17 @@ const COLORS = {
   major:  '#e0622a',
 }
 
+const CAT_COLORS = {
+  'Patron':                    '#C44E52',
+  'Mechanical/Infrastructure': '#4C72B0',
+  'Mechanical/Vehicle':        '#DD8452',
+  'Operational/Process':       '#55A868',
+  'Security':                  '#E377C2',
+  'Weather':                   '#8172B3',
+  'Other':                     '#937860',
+}
+const CATEGORIES = Object.keys(CAT_COLORS)
+
 function fmt(n) {
   return n.toLocaleString('en-CA')
 }
@@ -42,6 +53,66 @@ function ChartTooltip({ active, payload, label, formatter }) {
     <div className="tooltip">
       <div className="tooltip-label">{label}</div>
       <div className="tooltip-value">{formatter(payload[0].value)}</div>
+    </div>
+  )
+}
+
+function CategoryTooltip({ active, payload, label }) {
+  if (!active || !payload?.length) return null
+  const total = payload.reduce((s, p) => s + p.value, 0)
+  const sorted = [...payload].sort((a, b) => b.value - a.value)
+  return (
+    <div className="tooltip">
+      <div className="tooltip-label">{label}</div>
+      {sorted.map(p => (
+        <div key={p.dataKey} className="tooltip-cat-row">
+          <span className="tooltip-cat-dot" style={{ background: p.fill }} />
+          <span className="tooltip-cat-name">{p.dataKey}</span>
+          <span className="tooltip-cat-value">{total ? (p.value / total * 100).toFixed(1) : '0.0'}%</span>
+        </div>
+      ))}
+    </div>
+  )
+}
+
+function CategoryStackChart({ data }) {
+  return (
+    <div className="chart-card">
+      <div className="chart-header">
+        <div className="chart-title">Category Share of Incidents per Month</div>
+        <div className="chart-subtitle">Proportion of delay incidents attributed to each category</div>
+      </div>
+      <div className="cat-legend">
+        {CATEGORIES.map(cat => (
+          <div key={cat} className="cat-legend-item">
+            <span className="cat-legend-dot" style={{ background: CAT_COLORS[cat] }} />
+            <span className="cat-legend-label">{cat}</span>
+          </div>
+        ))}
+      </div>
+      <ResponsiveContainer width="100%" height={200}>
+        <BarChart data={data} barSize={6} stackOffset="expand" margin={{ top: 4, right: 16, left: 8, bottom: 0 }}>
+          <XAxis
+            dataKey="month_label"
+            tick={<XTick />}
+            axisLine={false}
+            tickLine={false}
+            interval={0}
+            height={28}
+          />
+          <YAxis
+            axisLine={false}
+            tickLine={false}
+            width={40}
+            tick={<YTick formatter={v => `${Math.round(v * 100)}%`} />}
+          />
+          <Tooltip content={<CategoryTooltip />} cursor={{ fill: 'rgba(255,255,255,0.04)' }} />
+          {CATEGORIES.map(cat => (
+            <Bar key={cat} dataKey={cat} stackId="a" fill={CAT_COLORS[cat]} />
+          ))}
+        </BarChart>
+      </ResponsiveContainer>
+      <div className="chart-source">Source: City of Toronto Open Data — TTC Subway Delay Data</div>
     </div>
   )
 }
@@ -96,6 +167,7 @@ function StatCard({ value, label, color }) {
 
 export default function SubwayDelays() {
   const { data, loading, error } = useCSV(`${import.meta.env.BASE_URL}data/monthly.csv`)
+  const { data: catData } = useCSV(`${import.meta.env.BASE_URL}data/monthly_by_category.csv`)
 
   const chartData = useMemo(() => {
     if (!data) return []
@@ -104,6 +176,24 @@ export default function SubwayDelays() {
       total_delay_days: +(row.total_delay / 1440).toFixed(2),
     }))
   }, [data])
+
+  const categoryChartData = useMemo(() => {
+    if (!catData) return []
+    const byMonth = {}
+    catData.forEach(row => {
+      if (!byMonth[row.year_month]) {
+        byMonth[row.year_month] = { month_label: row.month_label, _ym: row.year_month }
+      }
+      byMonth[row.year_month][row.category] = row.delays
+    })
+    return Object.values(byMonth)
+      .sort((a, b) => a._ym - b._ym)
+      .map(month => {
+        const out = { month_label: month.month_label }
+        CATEGORIES.forEach(c => { out[c] = month[c] || 0 })
+        return out
+      })
+  }, [catData])
 
   const stats = useMemo(() => {
     if (!data?.length) return null
@@ -186,6 +276,9 @@ export default function SubwayDelays() {
               yFormatter={v => fmt(v)}
               tooltipFormatter={v => `${fmt(v)} major delays`}
             />
+            {categoryChartData.length > 0 && (
+              <CategoryStackChart data={categoryChartData} />
+            )}
           </div>
         )}
       </div>

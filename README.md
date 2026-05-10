@@ -47,7 +47,6 @@ cp .env.example .env
 |---|---|---|
 | `SIXSIGHT_LOG_LEVEL` | `INFO` | Logging verbosity |
 | `SIXSIGHT_REQUEST_TIMEOUT` | `30.0` | HTTP timeout in seconds |
-| `SIXSIGHT_CACHE_DIR` | `.cache` | Local cache directory |
 
 All variables are optional — the defaults work out of the box.
 
@@ -142,6 +141,7 @@ Each resource file is saved as `data/<dataset-name>/<filename>` where the filena
 data/
   raw/<dataset-name>/   # files downloaded by `sixsight download`
   prep/<dataset-name>/  # aggregated outputs written by CLI commands (e.g. monthly.csv)
+  meta/<dataset-name>/  # hand-maintained reference files (e.g. codes_categories.csv)
 ```
 
 ### Subway delay analysis

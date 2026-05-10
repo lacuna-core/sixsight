@@ -31,10 +31,11 @@ def aggregate(
     """Concatenate all TTC subway delay files and write monthly stats to data/prep."""
     import polars as pl
 
-    from sixsight.transforms.ttc_subway_delay import monthly_stats
+    from sixsight.transforms.ttc_subway_delay import monthly_by_category, monthly_stats
 
     raw_dir = data_dir / "raw" / DATASET_NAME
-    out_path = data_dir / "prep" / DATASET_NAME / "monthly.csv"
+    meta_path = data_dir / "meta" / DATASET_NAME / "codes_categories.csv"
+    prep_dir = data_dir / "prep" / DATASET_NAME
 
     frames: list[pl.DataFrame] = []
 
@@ -48,8 +49,16 @@ def aggregate(
             frames.append(pl.read_excel(path))
 
     combined = pl.concat(frames)
-    monthly = monthly_stats(combined)
 
-    out_path.parent.mkdir(parents=True, exist_ok=True)
-    monthly.write_csv(out_path)
-    console.print(f"\n[green]Done.[/green] {len(monthly)} months → {out_path}")
+    prep_dir.mkdir(parents=True, exist_ok=True)
+
+    monthly = monthly_stats(combined)
+    monthly_path = prep_dir / "monthly.csv"
+    monthly.write_csv(monthly_path)
+    console.print(f"[green]✓[/green] {len(monthly)} months → {monthly_path}")
+
+    categories = pl.read_csv(meta_path)
+    monthly_cat = monthly_by_category(combined, categories)
+    monthly_cat_path = prep_dir / "monthly_by_category.csv"
+    monthly_cat.write_csv(monthly_cat_path)
+    console.print(f"[green]✓[/green] {len(monthly_cat)} month×category rows → {monthly_cat_path}")

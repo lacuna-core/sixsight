@@ -16,11 +16,9 @@ export default function Hero() {
           that deserve public attention.
         </p>
         <div className="hero-meta">
-          <span className="hero-meta-item">City of Toronto Open Data</span>
+          <a className="hero-meta-item" href="https://open.toronto.ca/" target="_blank" rel="noreferrer">City of Toronto Open Data</a>
           <span className="hero-meta-sep" />
-          <span className="hero-meta-item">Updated via TTC open data portal</span>
-          <span className="hero-meta-sep" />
-          <span className="hero-meta-item">Open source</span>
+          <a className="hero-meta-item" href="https://github.com/lacuna-core/sixsight" target="_blank" rel="noreferrer">Open source</a>
         </div>
       </div>
     </section>

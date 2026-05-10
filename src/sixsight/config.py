@@ -11,7 +11,6 @@ class Settings(BaseSettings):
         "https://ckan0.cf.opendata.inter.prod-toronto.ca"
     )
     request_timeout: float = 30.0
-    cache_dir: str = ".cache"
     log_level: str = "INFO"
 
 

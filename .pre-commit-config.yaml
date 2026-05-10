@@ -4,7 +4,9 @@ repos:
     hooks:
       - id: ruff-check
         args: [--fix]
+        pass_filenames: false
       - id: ruff-format
+        pass_filenames: false
 
   - repo: local
     hooks:

@@ -37,6 +37,7 @@ Logging is configured once in `__init__.py`: loguru handler removed and re-added
 data/
   raw/<dataset-name>/   # files downloaded by `sixsight download`
   prep/<dataset-name>/  # aggregated outputs written by CLI commands (e.g. monthly.csv)
+  meta/<dataset-name>/  # hand-maintained reference files (e.g. codes_categories.csv)
 ```
 
 ## Web (`web/`)
