@@ -12,3 +12,4 @@ and wait for approval before proceeding.
 
 Never use `git add .`
 Never commit if staging produced unexpected files — stop and ask instead.
+Don't use "Co-Authored-By"

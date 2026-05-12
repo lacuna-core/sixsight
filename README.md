@@ -14,7 +14,8 @@ Uses [CKAN API](https://docs.ckan.org/en/latest/api/index.html) to access the da
 ### Prerequisites
 
 - [uv](https://docs.astral.sh/uv/getting-started/installation/) — Python package manager
-- Python 3.14 (uv will install it automatically if missing)
+- [gh](https://github.com/cli/cli) - GitHub CLI tool
+- [git-cliff](https://git-cliff.org/docs/) - Git Cliff CLI
 
 ### Install
 
@@ -153,6 +154,26 @@ sixsight subway aggregate
 ```
 
 Output is written to `data/prep/ttc-subway-delay-data/monthly.csv`.
+
+---
+
+## Releases
+
+Releases are published to [GitHub Releases](https://github.com/lacuna-core/sixsight/releases). Release notes are auto-generated from conventional commits and grouped by type (Features, Bug Fixes, Performance, Maintenance).
+
+To cut a release:
+
+```bash
+# 1. Bump version in pyproject.toml, then commit
+git commit -m "chore: bump version to 0.2.0"
+
+# 2. Tag and push
+git tag v0.2.0
+git push origin main
+git push origin v0.2.0
+```
+
+GitHub Actions will create a **draft** release. Review and edit the notes on GitHub, then publish.
 
 ---
 
