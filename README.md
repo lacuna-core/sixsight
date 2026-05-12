@@ -1,11 +1,10 @@
 # SixSight 🏙️
 
-SixSight is an open-source analytics platform that ingests, transforms, and visualizes datasets published by the City of Toronto. The project aims to surface meaningful insights from civic data — spanning transit, infrastructure, public safety, permits, demographics, and more — to support researchers, journalists, policymakers, and curious Torontonians.
+SixSight is an open-source analytics platform that ingests, transforms, and visualises datasets published by the City of Toronto. The project aims to surface meaningful insights from civic data — spanning transit, infrastructure, public safety, permits, demographics, and more — to support researchers, journalists, policymakers, and curious Torontonians.
 
 The name is a nod to The 6ix, Toronto's cultural identity rooted in its area codes (416 / 647), fused with insight — the project's core purpose.
 
-Powered by the [City of Toronto Open Data Portal](https://open.toronto.ca/).
-Uses [CKAN API](https://docs.ckan.org/en/latest/api/index.html) to access the data
+Powered by the [City of Toronto Open Data Portal](https://open.toronto.ca/) via the [CKAN API](https://docs.ckan.org/en/latest/api/index.html).
 
 ---
 
@@ -14,26 +13,22 @@ Uses [CKAN API](https://docs.ckan.org/en/latest/api/index.html) to access the da
 ### Prerequisites
 
 - [uv](https://docs.astral.sh/uv/getting-started/installation/) — Python package manager
-- [gh](https://github.com/cli/cli) - GitHub CLI tool
-- [git-cliff](https://git-cliff.org/docs/) - Git Cliff CLI
 
 ### Install
 
 ```bash
-git clone https://github.com/your-org/sixsight.git
+git clone https://github.com/lacuna-core/sixsight.git
 cd sixsight
-uv sync --dev
-uv run pre-commit install
+uv sync
 ```
 
-`uv sync` creates a `.venv`, installs all dependencies (including dev tools), and pins versions from `uv.lock`. `pre-commit install` wires up the git hooks — after that, `ruff check --fix` and `ruff format` run automatically on every commit.
-
 To run commands:
+
 ```bash
-uv run command -xyz
-# or
+uv run sixsight --help
+# or activate the virtualenv
 source .venv/bin/activate
-command -xyz
+sixsight --help
 ```
 
 ### Configuration
@@ -51,26 +46,7 @@ cp .env.example .env
 
 All variables are optional — the defaults work out of the box.
 
-### Run the test suite
-
-```bash
-pytest
-```
-
-Coverage report is printed automatically. To open an HTML report:
-
-```bash
-pytest --cov-report=html && open htmlcov/index.html
-```
-
-### Lint and type-check
-
-```bash
-ruff check          # lint
-ruff check --fix    # fix linting errors
-ruff format         # format
-mypy                # type-check
-```
+For dev environment setup, testing, linting, and contribution guidelines, see [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ---
 
@@ -80,9 +56,7 @@ All commands are available via the `sixsight` entry point:
 
 ```bash
 sixsight --help
-# or
-ss --help
-# Install completion for the current shell
+# Install shell completion
 sixsight --install-completion
 ```
 
@@ -128,13 +102,13 @@ station, line, and minutes delayed.
 
 ### Download a dataset
 
-Download all resource files for a dataset into `data/<dataset-name>/`:
+Download all resource files for a dataset into `data/raw/<dataset-name>/`:
 
 ```bash
 sixsight download ttc-subway-delay-data -f csv
 ```
 
-Each resource file is saved as `data/<dataset-name>/<filename>` where the filename is taken from the download URL. A `metadata.json` file is written alongside the data files containing the full dataset metadata.
+Each resource file is saved alongside a `metadata.json` file containing the full dataset metadata.
 
 ### Data directories
 
@@ -159,58 +133,4 @@ Output is written to `data/prep/ttc-subway-delay-data/monthly.csv`.
 
 ## Releases
 
-Releases are published to [GitHub Releases](https://github.com/lacuna-core/sixsight/releases). Release notes are auto-generated from conventional commits and grouped by type (Features, Bug Fixes, Performance, Maintenance).
-
-To cut a release:
-
-```bash
-# 1. Bump version in pyproject.toml, then commit
-git commit -m "chore: bump version to 0.2.0"
-
-# 2. Tag and push
-git tag v0.2.0
-git push origin main
-git push origin v0.2.0
-```
-
-GitHub Actions will create a **draft** release. Review and edit the notes on GitHub, then publish.
-
----
-
-## Web interface
-
-A static Vite + React site that visualises the prepared data.
-
-### Prerequisites
-
-- [Node.js](https://nodejs.org/) 24+
-
-To regenerate `web/public/data/monthly.csv` after new raw data is downloaded:
-```bash
-ss subway aggregate
-cp data/prep/ttc-subway-delay-data/monthly.csv web/public/data/monthly.csv
-
-### Local development
-
-```bash
-# 1. Generate the aggregated data (if not already present)
-uv run ss subway aggregate
-
-# 2. Copy it into the web public directory
-cp data/prep/ttc-subway-delay-data/monthly.csv web/public/data/monthly.csv
-
-# 3. Install dependencies and start the dev server
-cd web
-npm install
-npm run dev
-```
-
-The site is available at **http://localhost:5173**.
-
-### Production build
-
-```bash
-cd web
-npm run build       # output → web/dist/
-npm run preview     # serve the build locally to verify
-```
+Published releases and their changelogs are available on [GitHub Releases](https://github.com/lacuna-core/sixsight/releases).

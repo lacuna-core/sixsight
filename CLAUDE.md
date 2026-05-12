@@ -95,4 +95,4 @@ All commits generated or suggested by Claude must conform to this spec.
 - mypy is strict. All functions including tests need return type annotations.
 - Git hooks (pre-commit) run ruff (fix + format) and mypy on every commit.
 - CLI lazy imports: in `cli/app.py`, `sixsight.*` imports must be inside the command function body, not at module level. `typer`, `rich`, and stdlib belong at the top of the file. This keeps `--help` fast and isolates heavy deps per command.
-- **After every significant change** — new CLI command, new data pipeline, new web section, new dependency, changed directory layout — update both `CLAUDE.md` (Architecture / conventions) and `README.md` (user-facing instructions). Keep them in sync with the actual codebase.
+- **After every significant change** — new CLI command, new data pipeline, new web section, new dependency, changed directory layout — update `CLAUDE.md` (architecture / conventions), `README.md` (user-facing instructions), and `CONTRIBUTING.md` (dev setup / release process). Keep them in sync with the actual codebase.
