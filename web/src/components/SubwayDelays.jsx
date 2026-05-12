@@ -214,7 +214,7 @@ export default function SubwayDelays() {
             Every logged delay on the TTC subway system, aggregated by month.
             A delay is any incident that holds a train beyond schedule.
             Data is sourced from the{' '}
-            <a href="https://open.toronto.ca/" target="_blank" rel="noreferrer">City of Toronto Open Data portal</a>
+            <a href="https://open.toronto.ca/dataset/ttc-subway-delay-data/" target="_blank" rel="noreferrer">TTC Subway Delay Data</a>
             {' '}and covers 2014 to present. Some periods have incomplete or missing monthly records.
           </p>
         </div>
