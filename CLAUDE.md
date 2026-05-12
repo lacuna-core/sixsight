@@ -63,6 +63,31 @@ npm run build      # production build → web/dist/
 ## Dependencies
 Uses [CKAN API](https://docs.ckan.org/en/latest/api/index.html) to access the data
 
+## Commit Message Convention
+
+This project follows **Conventional Commits** (https://www.conventionalcommits.org).
+All commits generated or suggested by Claude must conform to this spec.
+
+### Format
+<type>[optional scope]: <description>
+[optional body]
+[optional footer(s)]
+
+### Allowed types
+
+- feat, fix, docs, style, refactor, perf, test, build, ci, chore, revert
+
+### Scopes for this project (pick the closest match)
+
+- web, python, research
+
+### Rules
+
+1. Subject line ≤ 72 characters, lowercase, no trailing period.
+2. Use imperative mood: "add feature" not "added feature".
+3. Breaking changes: append `!` to the type OR add a `BREAKING CHANGE:` footer.
+4Never squash unrelated changes into one commit — split them.
+
 ## Key conventions and guidelines
 
 - Dependency injection: `TorontoOpenDataClient(config=SETTINGS)` — always pass config explicitly, never use the global inside library code.
