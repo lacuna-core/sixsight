@@ -150,8 +150,6 @@ Aggregate all TTC subway delay files into a monthly summary CSV:
 
 ```bash
 sixsight subway aggregate
-# or using the ss alias:
-ss subway aggregate
 ```
 
 Output is written to `data/prep/ttc-subway-delay-data/monthly.csv`.
@@ -164,11 +162,11 @@ A static Vite + React site that visualises the prepared data.
 
 ### Prerequisites
 
-- [Node.js](https://nodejs.org/) 20+
+- [Node.js](https://nodejs.org/) 24+
 
 To regenerate `web/public/data/monthly.csv` after new raw data is downloaded:
 ```bash
-uv run ss subway aggregate
+ss subway aggregate
 cp data/prep/ttc-subway-delay-data/monthly.csv web/public/data/monthly.csv
 
 ### Local development
